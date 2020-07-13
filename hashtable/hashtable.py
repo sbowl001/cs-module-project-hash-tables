@@ -52,7 +52,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+# to do
 
     def fnv1(self, key):
         """
@@ -101,7 +101,7 @@ class HashTable:
         i = self.hash_index(key)
         self.storage[i] = value
 
-
+# modify put get and delete 
     def delete(self, key):
         """
         Remove the value stored with the given key.
@@ -137,7 +137,7 @@ class HashTable:
         """
         # Your code here
 
-
+# todo
 
 if __name__ == "__main__":
     ht = HashTable(8)
