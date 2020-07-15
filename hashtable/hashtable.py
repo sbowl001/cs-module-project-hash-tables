@@ -135,6 +135,18 @@ class HashTable:
 
         Implement this.
         """
+        self.print("resize before", self.capacity)
+
+        new = [None] * new_capacity
+
+        counter = 0 
+        for item in self.array: 
+            new[counter] = item 
+            counter += 1
+        self.array = new 
+        self.print("resize after", new_capacity)
+
+
         # Your code here
 
 # todo
