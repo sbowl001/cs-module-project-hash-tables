@@ -135,7 +135,7 @@ class HashTable:
 
         Implement this.
         """
-        self.print("resize before", self.capacity)
+        print("resize before", self.capacity)
 
         new = [None] * new_capacity
 
@@ -144,7 +144,7 @@ class HashTable:
             new[counter] = item 
             counter += 1
         self.array = new 
-        self.print("resize after", new_capacity)
+        print("resize after", new_capacity)
 
 
         # Your code here
