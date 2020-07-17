@@ -1,5 +1,15 @@
 def no_dups(s):
     # Your code here
+    cache = {}
+    formatted_string = [] 
+
+
+    for word in s.split():
+        if word not in cache:
+            cache[word] = 1 
+            formatted_string.append(word)
+    return " ".join(formatted_string)
+    
 
 
 
