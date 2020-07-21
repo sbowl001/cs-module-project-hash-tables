@@ -23,9 +23,9 @@ class HashTable:
     def __init__(self, capacity):
         # Your code here
         self.capacity = capacity
-        self.items_stored = 0 
-        self.storage = [None] * capacity 
-
+        # self.items_stored = 0 
+        self.hashlist = [None] * capacity 
+        self.number_items = 0
 
     def get_num_slots(self):
         """
@@ -38,19 +38,22 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        items = f'# {self.items_stored}/{self.capacity} items stored'
+        # items = f'# {self.items_stored}/{self.capacity} items stored'
 
-        contents = "\n".join([str(index) + " :" + str(linked_list) for index, linked_list in enumerate(self.storage)])
+        # contents = "\n".join([str(index) + " :" + str(linked_list) for index, linked_list in enumerate(self.storage)])
 
-        return items + contents 
+        # return items + contents 
         # return items 
 
+        return self.capacity
     def get_load_factor(self):
         """
         Return the load factor for this hash table.
 
         Implement this.
         """
+
+        return self.number_items / self.capacity
         # Your code here
 # to do
 
@@ -61,8 +64,25 @@ class HashTable:
         Implement this, and/or DJB2.
         """
 
-        # Your code here
+        # The FNV_offset_basis is the 64-bit FNV offset basis value: 14695981039346656037 (in hex, 0xcbf29ce484222325).
+        # The FNV_prime is the 64-bit FNV prime value: 1099511628211 (in hex, 0x100000001b3).
+        # Algorithm:
+        # hash := FNV_offset_basis do
+        # for each byte_of_data to be hashed
+        #     hash := hash × FNV_prime
+        #     hash := hash XOR byte_of_data
+        # return hash 
+       
+        FNV_offset_basis = 14695981039346656037 
+        FNV_prime = 1099511628211 
+        hashed_key = FNV_offset_basis
+        byte_keys = key.encode()
 
+
+        for byte in byte_keys:
+            hashed_key = hashed_key * FNV_prime
+            hashed_key = hashed_key ^ byte 
+        return hashed_key
 
     def djb2(self, key):
         """
@@ -72,13 +92,16 @@ class HashTable:
         """
         # Your code here
 
-        key_bytes = key.encode()
+        # key_bytes = key.encode()
+        # hash = 5381 
+        # for k_byte in key_bytes:
+        #     hash = hash * 33 + k_byte 
+        #     hash &= 0xffffffff
+        # return hash 
         hash = 5381 
-        for k_byte in key_bytes:
-            hash = hash * 33 + k_byte 
-            hash &= 0xffffffff
+        for l in key: 
+            hash = ((hash << 5) + hash) + ordl(l)
         return hash 
-
 
     def hash_index(self, key):
         """
@@ -98,8 +121,29 @@ class HashTable:
         """
         # Your code here
 
-        i = self.hash_index(key)
-        self.storage[i] = value
+        # i = self.hash_index(key)
+        # self.storage[i] = value
+
+        index = self.hash_index(key)
+        # check the index, if it's empty , put a node there
+        if self.hashlist[index] is None: 
+            self.hashlist[index] = HashTableEntry(key, value)
+            self.number_items += 1 
+        # otherwise iterate through the linked list 
+        else: 
+            current_node = self.hashlist[index]
+            while current_node is not None: 
+                if current_node.key == key: 
+                    current_node.value = value 
+                    break 
+        # check for the key, update value if it's there
+        # if we reach the end , add a new node 
+                elif current_node.next == None: 
+                    current_node.next = HashTableEntry(key, value)
+                    self.number_items += 1 
+                    break 
+                else: 
+                    current_node = current_node.next 
 
 # modify put get and delete 
     def delete(self, key):
@@ -135,19 +179,39 @@ class HashTable:
 
         Implement this.
         """
-        print("resize before", self.capacity)
+        # print("resize before", self.capacity)
 
-        new = [None] * new_capacity
+        # new = [None] * new_capacity
 
-        counter = 0 
-        for item in self.array: 
-            new[counter] = item 
-            counter += 1
-        self.array = new 
-        print("resize after", new_capacity)
+        # counter = 0 
+        # for item in self.array: 
+        #     new[counter] = item 
+        #     counter += 1
+        # self.array = new 
+        # print("resize after", new_capacity)
 
 
-        # Your code here
+        # save our old storage
+
+        old_storage = self.hashlist
+
+
+        # make a new, bigger storage
+        self.hashlist = [None] * new_capacity
+        self.capacity = new_capacity 
+
+        # iterate through our hashlist 
+        for bucket in old_storage: 
+            while bucket is not None: 
+                # hash key, value
+                key = bucket.key 
+                value = bucket.value 
+                self.put(key, value)
+                # key 
+                bucket = bucket.next 
+                # go on to the next node
+        # iterate through every linked list 
+
 
 # todo
 
